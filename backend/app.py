@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, make_response
-from flask_sqlalchemy import SQLAlchemy, now
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from os import environ
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)  
@@ -18,7 +19,7 @@ class User(db.Model):
   role = db.Column(db.String(120), unique=False, nullable=True, default="User")
   status = db.Column(db.String(120), unique=False, nullable=True, default="Non-active")
   image = db.Column(db.String(120), unique=False, nullable=False, default="png.png")
-  time = db.Column(db.String(120), unique=False, nullable=False, default=now())
+  time = db.Column(db.String(120), unique=False, nullable=False, default=datetime.now().strftime("%H:%M:%S"))
 
   def json(self):
     return {
@@ -35,7 +36,7 @@ class User(db.Model):
 class getTime(db.Model):
   __tablename__ = 'timers'
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   startTime = db.Column(db.String(120), unique=True, nullable=False)
   
   def json(self):
@@ -55,7 +56,7 @@ def test():
 
 # create a user
 
-@app.route('/users', methods=['POST'])
+@app.route('/api/users', methods=['POST'])
 def create_user():
   try:
     data = request.get_json()
@@ -75,7 +76,7 @@ def create_user():
     return make_response(jsonify({'massege': 'Не получилось зарегестрироваться', 'error': str(e)}), 500)
   
 # get all users
-@app.route('/users', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 def get_users():
   try:
     users = User.query.all()
