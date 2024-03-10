@@ -5,25 +5,24 @@ import { useState } from "react"
 
 
 export default function AddUser() {
- 
-  const [newUser, setNewUser] = useState({
-    email: '',
-    name: '',
-    sername: '',
-    password: ''
-  });
+
+  const [email, setNewEmail] = useState('');
+  const [password, setNewPassword] = useState('');
 
 
   const addUser = () => {
-    fetch('http://localhost:4000/api/users', {
+    fetch('http://localhost:4000/api/login', {
       method: "POST",
       body : JSON.stringify({
-        newUser,
+        email,
+        password
       }),
       headers: {
         "content-type": "application/json",
       },
     }).catch((e) => console.log(e));
+
+    
   }
 
 
@@ -35,27 +34,15 @@ export default function AddUser() {
     }}>
       <input type="text" 
       name="email"
-      value={newUser.email}
+      value={email}
       placeholder="Enter email"
-      onChange={e => setNewUser({...newUser, email: e.target.value})}
-      />
-      <input type="text" 
-      name="naem"
-      value={newUser.name}
-      placeholder="Enter name"
-      onChange={e => setNewUser({...newUser, name: e.target.value})}      
-      />
-      <input type="text" 
-      name="sername"
-      value={newUser.sername}
-      placeholder="Enter sername"
-      onChange={e => setNewUser({...newUser, sername: e.target.value})}
+      onChange={e => setNewEmail(e.target.value)}
       />
       <input type="text" 
       name="paswword"
-      value={newUser.password}
+      value={password}
       placeholder="Enter password"
-      onChange={e => setNewUser({...newUser, password: e.target.value})}
+      onChange={e => setNewPassword(e.target.value)}
       />
 
       <button type="submit">Enter</button>
